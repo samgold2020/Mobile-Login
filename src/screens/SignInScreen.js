@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 import {
   View,
@@ -9,6 +9,7 @@ import {
   Image,
   Alert,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import InputText from '../components/InputText/index';
 import styles from './styles';
@@ -32,6 +33,7 @@ const SignInScreen = () => {
     if (response.status === 200) {
       setIsLoading(false);
       Alert.alert('Your user has been successfully created');
+      setUserCreds({ ...userCreds, userName: '', password: '' });
     } else {
       Alert.alert('We have encountered an issue. Please try again later.');
     }
@@ -40,12 +42,16 @@ const SignInScreen = () => {
   const validate = () => {
     setEmailValid(emailValidation.test(userCreds.username));
     setPasswordValid(passValidation.test(userCreds.password));
+    //TODO
+    //Fix validate
     if (emailValid && passwordValid) {
       handleSubmit();
+    } else {
+      //TODO
+      //Handle Error
     }
   };
 
-  //TODO add tooltip explaining password requirements
   //TODO: Impliment ref
   // const passwordInputEl = useRef(null);
 
@@ -55,60 +61,64 @@ const SignInScreen = () => {
         <Image source={ProKeepLogo} style={styles.logo} />
         <Text style={styles.logoText}>Create Your Profile</Text>
       </View>
-      <View style={styles.subContainer}>
-        <InputText
-          title="Username"
-          value={userCreds.username}
-          onChangeText={e => {
-            setUserCreds({ ...userCreds, username: e });
-            /*Invalidate if the user deletes all info from the field*/
-            if (e.length === 0) {
-              setEmailValid(false);
+
+      <KeyboardAwareScrollView>
+        <View style={styles.subContainer}>
+          <InputText
+            title="Username"
+            value={userCreds.username}
+            onChangeText={e => {
+              setUserCreds({ ...userCreds, username: e });
+              /*Invalidate if the user deletes all info from the field*/
+              if (e.length === 0) {
+                setEmailValid(false);
+              }
+            }}
+            autoComplete="off"
+            autoCorrect={false}
+            autoCapitalize="none"
+            returnKeyType="next"
+            errorMessage={'Invalid email'}
+            error={!emailValid}
+            //TODO fix useRef
+            // onSubmitEditing={() => passwordInputEl.current.focus()}
+          />
+        </View>
+        <View style={styles.subContainer}>
+          <InputText
+            title="Password"
+            value={userCreds.password}
+            onChangeText={e => {
+              setUserCreds({ ...userCreds, password: e });
+              /*Invalidate if the user deletes all info from the field*/
+              if (e.length === 0) {
+                setPasswordValid(false);
+              }
+            }}
+            autoComplete="off"
+            autoCorrect={false}
+            autoCapitalize="none"
+            errorMessage={
+              'Passwords must be at least eight characters including at least one letter, one number and one special character'
             }
-          }}
-          autoComplete="off"
-          autoCorrect={false}
-          autoCapitalize="none"
-          returnKeyType="next"
-          errorMessage={'Invalid email'}
-          error={!emailValid}
-          //TODO fix useRef onSubmitEditing={() => passwordInputEl.current.focus()}
-        />
-        <InputText
-          title="Password"
-          value={userCreds.password}
-          onChangeText={e => {
-            setUserCreds({ ...userCreds, password: e });
-            /*Invalidate if the user deletes all info from the field*/
-            if (e.length === 0) {
-              setPasswordValid(false);
-            }
-          }}
-          autoComplete="off"
-          autoCorrect={false}
-          autoCapitalize="none"
-          errorMessage={
-            'Passwords must be at least eight characters including at least one letter, one number and one special character'
-          }
-          error={!passwordValid}
-          //TODO fix ref={passwordInputEl}
-        />
-        {/* TODO: Pass isLoading prop to button and change button to success */}
-        <TouchableOpacity style={styles.button} onPress={() => validate()}>
-          {isLoading ? (
-            <>
-              <Text style={styles.buttonText}>
-                <Text>
-                  <ActivityIndicator size="small" color={Colors.mustard} />
-                </Text>
-                Submitting
-              </Text>
-            </>
-          ) : (
-            <Text style={styles.buttonText}>Submit</Text>
-          )}
-        </TouchableOpacity>
-      </View>
+            error={!passwordValid}
+            //TODO fix
+            // ref={passwordInputEl}
+          />
+        </View>
+      </KeyboardAwareScrollView>
+      <TouchableOpacity style={styles.button} onPress={() => validate()}>
+        {isLoading ? (
+          <Text style={styles.buttonText}>
+            <Text>
+              <ActivityIndicator size="small" color={Colors.mustard} />
+            </Text>
+            {' Submitting'}
+          </Text>
+        ) : (
+          <Text style={styles.buttonText}>Submit</Text>
+        )}
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
