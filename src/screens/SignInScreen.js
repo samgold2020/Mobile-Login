@@ -5,15 +5,17 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
-  // ActivityIndicator,
+  ActivityIndicator,
   Image,
+  Alert,
 } from 'react-native';
 
 import InputText from '../components/InputText/index';
 import styles from './styles';
 import { emailValidation, passValidation } from '../utils/validation';
-import { userLogin } from '../../queryHelper';
+import { createUser } from '../../queryHelper';
 import ProKeepLogo from '../assets/logo.png';
+import { Colors } from '../constants';
 
 const SignInScreen = () => {
   const [userCreds, setUserCreds] = useState({
@@ -22,17 +24,17 @@ const SignInScreen = () => {
   });
   const [emailValid, setEmailValid] = useState(true);
   const [passwordValid, setPasswordValid] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  /*TODO:
-  1. Make API call with username and Password
-  2. Set isLoading state to true
-  3. Get Response
-  3.a On successful response set loading to false and "Submit" button to "Success"
-  3.a.1 Reset state
-  3.b On unsuccessful response show Alert for error and try again later
-   */
   const handleSubmit = async () => {
-    const response = await userLogin(userCreds.username, userCreds.password);
+    setIsLoading(true);
+    const response = await createUser(userCreds.username, userCreds.password);
+    if (response.status === 200) {
+      setIsLoading(false);
+      Alert.alert('Your user has been successfully created');
+    } else {
+      Alert.alert('We have encountered an issue. Please try again later.');
+    }
   };
 
   const validate = () => {
@@ -93,7 +95,18 @@ const SignInScreen = () => {
         />
         {/* TODO: Pass isLoading prop to button and change button to success */}
         <TouchableOpacity style={styles.button} onPress={() => validate()}>
-          <Text style={styles.buttonText}>Submit</Text>
+          {isLoading ? (
+            <>
+              <Text style={styles.buttonText}>
+                <Text>
+                  <ActivityIndicator size="small" color={Colors.mustard} />
+                </Text>
+                Submitting
+              </Text>
+            </>
+          ) : (
+            <Text style={styles.buttonText}>Submit</Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
