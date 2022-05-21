@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { RFPercentage } from 'react-native-responsive-fontsize';
 
 import { Colors } from '../constants';
 
@@ -14,17 +15,20 @@ const styles = StyleSheet.create({
     height: undefined,
     aspectRatio: 3.8 / 1,
     borderRadius: 5,
+    marginTop: '50%',
   },
   logoText: {
     padding: 20,
-    width: '50%',
+    width: '75%',
     color: Colors.darkBlue,
     textAlign: 'center',
+    fontSize: RFPercentage(3),
   },
   subContainer: {
     marginHorizontal: 20,
   },
   button: {
+    marginHorizontal: 20,
     alignItems: 'center',
     backgroundColor: Colors.darkBlue,
     justifyContent: 'center',
@@ -33,7 +37,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.mustard,
-    fontSize: 24,
+    fontSize: RFPercentage(3),
   },
 });
 

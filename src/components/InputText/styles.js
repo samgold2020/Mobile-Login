@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
+import { RFPercentage } from 'react-native-responsive-fontsize';
 
 import { Colors } from '../../constants';
 
 const styles = StyleSheet.create({
   titleStyle: {
-    //TODO: Remove hardcoded fontsize
-    fontSize: 16,
+    fontSize: RFPercentage(2),
     color: Colors.darkBlue,
     paddingBottom: 5,
   },
@@ -18,8 +18,7 @@ const styles = StyleSheet.create({
   },
   errorStyle: {
     color: Colors.errorRed,
-    //TODO: Remove hardcoded fontsize
-    fontSize: 12,
+    fontSize: RFPercentage(1.5),
   },
 });
 
