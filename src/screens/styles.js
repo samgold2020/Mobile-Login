@@ -9,10 +9,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: Colors.lightBlue,
   },
+  logo: {
+    width: 325,
+    height: undefined,
+    aspectRatio: 3.8 / 1,
+    borderRadius: 5,
+  },
   logoText: {
     padding: 20,
     width: '50%',
-    color: Colors.mustard,
+    color: Colors.darkBlue,
     textAlign: 'center',
   },
   subContainer: {
@@ -21,13 +27,13 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     backgroundColor: Colors.darkBlue,
-    padding: 10,
+    justifyContent: 'center',
     borderRadius: 5,
     height: 40,
   },
   buttonText: {
     color: Colors.mustard,
-    fontSize: 16,
+    fontSize: 24,
   },
 });
 
