@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 
 import {
   View,
@@ -28,32 +28,27 @@ const SignInScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
-    setIsLoading(true);
-    const response = await createUser(userCreds.username, userCreds.password);
-    if (response.status === 200) {
-      setIsLoading(false);
-      Alert.alert('Your user has been successfully created');
-      setUserCreds({ ...userCreds, userName: '', password: '' });
-    } else {
-      Alert.alert('We have encountered an issue. Please try again later.');
+    if (isValid()) {
+      setIsLoading(true);
+      const response = await createUser(userCreds.username, userCreds.password);
+      if (response.status === 200) {
+        setIsLoading(false);
+        Alert.alert('Your user has been successfully created');
+        setUserCreds({ ...userCreds, username: '', password: '' });
+      } else {
+        Alert.alert('We have encountered an issue. Please try again later.');
+      }
     }
   };
 
-  const validate = () => {
+  const isValid = () => {
     setEmailValid(emailValidation.test(userCreds.username));
     setPasswordValid(passValidation.test(userCreds.password));
-    //TODO
-    //Fix validate
-    if (emailValid && passwordValid) {
-      handleSubmit();
-    } else {
-      //TODO
-      //Handle Error
-    }
+    return (
+      emailValidation.test(userCreds.username) &&
+      passValidation.test(userCreds.password)
+    );
   };
-
-  //TODO: Impliment ref
-  // const passwordInputEl = useRef(null);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,8 +75,6 @@ const SignInScreen = () => {
             returnKeyType="next"
             errorMessage={'Invalid email'}
             error={!emailValid}
-            //TODO fix useRef
-            // onSubmitEditing={() => passwordInputEl.current.focus()}
           />
         </View>
         <View style={styles.subContainer}>
@@ -102,12 +95,10 @@ const SignInScreen = () => {
               'Passwords must be at least eight characters including at least one letter, one number and one special character'
             }
             error={!passwordValid}
-            //TODO fix
-            // ref={passwordInputEl}
           />
         </View>
       </KeyboardAwareScrollView>
-      <TouchableOpacity style={styles.button} onPress={() => validate()}>
+      <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
         {isLoading ? (
           <Text style={styles.buttonText}>
             <Text>
