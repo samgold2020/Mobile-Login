@@ -5,7 +5,6 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
-  ActivityIndicator,
   Image,
   Alert,
 } from 'react-native';
@@ -13,10 +12,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import InputText from '../components/InputText/index';
 import styles from './styles';
-import { emailValidation, passValidation } from '../utils/validation';
-import { createUser } from '../../queryHelper';
+import { emailValidation } from '../utils/validation';
+import { userLogin } from '../queryHelper';
 import ProKeepLogo from '../assets/logo.png';
-import { Colors } from '../constants';
 
 const SignInScreen = () => {
   const [userCreds, setUserCreds] = useState({
@@ -25,28 +23,36 @@ const SignInScreen = () => {
   });
   const [emailValid, setEmailValid] = useState(true);
   const [passwordValid, setPasswordValid] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (isValid()) {
-      setIsLoading(true);
-      const response = await createUser(userCreds.username, userCreds.password);
-      if (response.status === 200) {
-        setIsLoading(false);
-        Alert.alert('Your user has been successfully created');
-        setUserCreds({ ...userCreds, username: '', password: '' });
-      } else {
-        Alert.alert('We have encountered an issue. Please try again later.');
+      try {
+        const response = await userLogin(
+          userCreds.username,
+          userCreds.password,
+        );
+        if (response.status === 200) {
+          Alert.alert('Login Successful');
+          setUserCreds({ ...userCreds, username: '', password: '' });
+        }
+      } catch (e) {
+        Alert.alert('Username or password is incorrect');
       }
     }
   };
 
+  /*
+  If input is greater than or equal to 2 setPasswordValid to false. 
+  Otherwise, setPasswordValid to true
+  */
+  const checkLength = input => input.length >= 2;
+
   const isValid = () => {
     setEmailValid(emailValidation.test(userCreds.username));
-    setPasswordValid(passValidation.test(userCreds.password));
+    setPasswordValid(checkLength(userCreds.password));
     return (
       emailValidation.test(userCreds.username) &&
-      passValidation.test(userCreds.password)
+      checkLength(userCreds.password)
     );
   };
 
@@ -54,7 +60,7 @@ const SignInScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={{ alignItems: 'center' }}>
         <Image source={ProKeepLogo} style={styles.logo} />
-        <Text style={styles.logoText}>Create Your Profile</Text>
+        <Text style={styles.logoText}>Please Sign In</Text>
       </View>
 
       <KeyboardAwareScrollView>
@@ -65,9 +71,7 @@ const SignInScreen = () => {
             onChangeText={e => {
               setUserCreds({ ...userCreds, username: e });
               /*Invalidate if the user deletes all info from the field*/
-              if (e.length === 0) {
-                setEmailValid(false);
-              }
+              e.length === 0 ? setEmailValid(false) : setEmailValid(true);
             }}
             autoComplete="off"
             autoCorrect={false}
@@ -83,32 +87,19 @@ const SignInScreen = () => {
             value={userCreds.password}
             onChangeText={e => {
               setUserCreds({ ...userCreds, password: e });
-              /*Invalidate if the user deletes all info from the field*/
-              if (e.length === 0) {
-                setPasswordValid(false);
-              }
+              /*Invalidate if the password is under two characters*/
+              e.length < 2 ? setPasswordValid(false) : setPasswordValid(true);
             }}
             autoComplete="off"
             autoCorrect={false}
             autoCapitalize="none"
-            errorMessage={
-              'Passwords must be at least eight characters including at least one letter, one number and one special character'
-            }
+            errorMessage={'Passwords must be a minimum of two characters'}
             error={!passwordValid}
           />
         </View>
       </KeyboardAwareScrollView>
       <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
-        {isLoading ? (
-          <Text style={styles.buttonText}>
-            <Text>
-              <ActivityIndicator size="small" color={Colors.mustard} />
-            </Text>
-            {' Submitting'}
-          </Text>
-        ) : (
-          <Text style={styles.buttonText}>Submit</Text>
-        )}
+        <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
