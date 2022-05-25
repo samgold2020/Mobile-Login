@@ -8,21 +8,19 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     justifyContent: 'center',
-    backgroundColor: Colors.lightBlue,
+    backgroundColor: Colors.netflixRed,
   },
   logo: {
-    width: 325,
+    width: 375,
     height: undefined,
-    aspectRatio: 3.8 / 1,
+    aspectRatio: 2.5 / 1,
     borderRadius: 5,
-    marginTop: '50%',
+    marginTop: '25%',
   },
   logoText: {
-    padding: 20,
-    width: '75%',
-    color: Colors.darkBlue,
-    textAlign: 'center',
+    color: Colors.black,
     fontSize: RFPercentage(3),
+    fontWeight: '700',
   },
   subContainer: {
     marginHorizontal: 20,
@@ -30,14 +28,17 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 20,
     alignItems: 'center',
-    backgroundColor: Colors.darkBlue,
+    backgroundColor: Colors.netflixGrey,
     justifyContent: 'center',
     borderRadius: 5,
-    height: 40,
+    height: 50,
+    // borderColor: Colors.netflixGrey,
+    // borderWidth: 1,
   },
   buttonText: {
-    color: Colors.mustard,
+    color: Colors.white,
     fontSize: RFPercentage(3),
+    fontWeight: '700',
   },
 });
 

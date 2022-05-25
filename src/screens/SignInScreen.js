@@ -14,7 +14,7 @@ import InputText from '../components/InputText/index';
 import styles from './styles';
 import { emailValidation } from '../utils/validation';
 import { userLogin } from '../queryHelper';
-import ProKeepLogo from '../assets/logo.png';
+import Logo from '../assets/logo.png';
 
 const SignInScreen = () => {
   const [userCreds, setUserCreds] = useState({
@@ -42,14 +42,17 @@ const SignInScreen = () => {
   };
 
   /*
-  If input is greater than or equal to 2 setPasswordValid to false. 
+  If input is less than 2 setPasswordValid to false. 
   Otherwise, setPasswordValid to true
   */
-  const checkLength = input => input.length >= 2;
+
+  //TODO Fix isValid Logic & CheckLength Logic
+  const checkLength = input => input.length < 2;
 
   const isValid = () => {
     setEmailValid(emailValidation.test(userCreds.username));
     setPasswordValid(checkLength(userCreds.password));
+    console.log(checkLength(userCreds.password));
     return (
       emailValidation.test(userCreds.username) &&
       checkLength(userCreds.password)
@@ -59,8 +62,8 @@ const SignInScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ alignItems: 'center' }}>
-        <Image source={ProKeepLogo} style={styles.logo} />
-        <Text style={styles.logoText}>Please Sign In</Text>
+        <Image source={Logo} style={styles.logo} />
+        <Text style={styles.logoText}>Sign In</Text>
       </View>
 
       <KeyboardAwareScrollView>

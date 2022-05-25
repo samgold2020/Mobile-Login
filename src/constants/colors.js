@@ -1,5 +1,4 @@
-export const lightBlue = '#AADADD';
-export const darkBlue = '#132B41';
-export const mediumBlue = '#2A7890';
-export const mustard = '#F3B64E';
-export const errorRed = '#C14B38';
+export const netflixRed = '#B90E0A';
+export const netflixGrey = '#222222';
+export const black = '#000000';
+export const white = '#FFFFFF';
